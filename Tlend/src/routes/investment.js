@@ -13,5 +13,7 @@ investment.post('/', upload.fields([
   { name: 'image' },
 ]), investmentCtrl.postInvestment)
 
+investment.get('/', investmentCtrl.getInvestment)
+
 
 module.exports = investment

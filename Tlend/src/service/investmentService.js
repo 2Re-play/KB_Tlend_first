@@ -1,5 +1,7 @@
-const { Transaction } = require('../lib/dbConnection')
+const { Transaction, getConnection } = require('../lib/dbConnection')
 const investmentDao = require('../dao/investmentDao')
+const homeDao = require('../dao/homeDao')
+const signedurl = require('../../config/signedurl')
 
 // 투자상품 등록하기
 exports.postInvestment = async (req, next) => {
@@ -30,4 +32,32 @@ exports.postInvestment = async (req, next) => {
   } catch (e) {
     console.log(e.message)
   }
+}
+
+
+exports.getInvestment = async () => {
+  const connection = await getConnection()
+  let result
+  try {
+    const itemList = await investmentDao.investmentItem(connection)
+    const hotItem = await investmentDao.hotInvestmentItem(connection)
+    const investmentvideoKey = await investmentDao.videoKey(connection, hotItem.investment_idx)
+    hotItem.video = await signedurl.getSignedUrl(investmentvideoKey.video_key)
+    for (const i in itemList) {
+      console.log(i)
+      const investmentListKey = await investmentDao.videoKey(connection, itemList[i].investment_idx)
+      itemList[i].video = await signedurl.getSignedUrl(investmentListKey.video_key)
+    }
+    result = {
+      hotItem,
+      itemList,
+    }
+    console.log(result)
+  } catch (e) {
+    console.log(e.message)
+  } finally {
+    connection.release()
+  }
+  console.log(result)
+  return result
 }

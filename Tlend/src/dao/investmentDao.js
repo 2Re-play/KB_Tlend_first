@@ -74,3 +74,34 @@ exports.postInvestment = (Transaction, data, next, req) => {
     return next(error)
   })
 }
+// investment item list 가져오기
+exports.investmentItem = (connection) => {
+  return new Promise((resolve, reject) => {
+    const Query = 'SELECT investment_title, investment_description,investment_finishDate, investment_achievement, investment_idx FROM Tlend.INVESTMENT ORDER BY investment_time DESC;'
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result)
+    })
+  })
+}
+
+// HOT investment item list 가져오기
+exports.hotInvestmentItem = (connection) => {
+  return new Promise((resolve, reject) => {
+    const Query = 'SELECT investment_title, investment_description,investment_finishDate, investment_achievement, investment_idx FROM Tlend.INVESTMENT ORDER BY investment_achievement DESC'
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result[0])
+    })
+  })
+}
+
+exports.videoKey = (connection, investment_idx) => {
+  return new Promise((resolve, reject) => {
+    const Query = `SELECT video_key FROM VIDEO WHERE investment_idx =${investment_idx}`
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result[0])
+    })
+  })
+}

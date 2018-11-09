@@ -11,3 +11,13 @@ exports.postInvestment = async (req, res, next) => {
     response.respondOnError(e.message, res, 500)
   }
 }
+
+exports.getInvestment = async (req, res, next) => {
+  try {
+    const result = await investmentService.getInvestment(req, next)
+    response.respondJson('Successfully get investmentHome item', result, res, 200)
+  } catch (e) {
+    console.log(e)
+    response.respondOnError(e.message, res, 500)
+  }
+}
