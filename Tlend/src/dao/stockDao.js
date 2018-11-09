@@ -1,8 +1,12 @@
 // ***************
 // **주식 상품 등록**
 // ***************
-exports.postStock = (Transaction, data, next) => {
+exports.postStock = (Transaction, data, next, req) => {
   Transaction(async (connection) => {
+    const videoData = req.files.video[0]
+    const imageData = req.files.image[0]
+    console.log(videoData)
+    console.log(imageData)
     const Query1 = `
       INSERT INTO
         STOCK(
@@ -19,9 +23,9 @@ exports.postStock = (Transaction, data, next) => {
           stock_enterDate)
         VALUES('${data.title}',
          '${data.description}',
-          '${data.goalmoney}',
+          '${data.goalMoney}',
           '${data.price}',
-          '${data.minMoney}',
+          '${data.minPrice}',
           '${data.schedule}',
           '${data.comValue}',
           '${data.repayDate}',
@@ -32,13 +36,24 @@ exports.postStock = (Transaction, data, next) => {
     const Query2 = `
       SELECT stock_idx FROM STOCK WHERE stock_title = "${data.title}";`
     const stock_idx = await connection.query(Query2)
-    console.log('어람ㄴ어라님어라ㅣ언ㅁㄹ', stock_idx)
     const Query3 = `
-      INSERT INTO VIDEO(stock_idx, video_name) VALUES(${stock_idx[0].stock_idx},"${data.videoName}")
+      INSERT INTO VIDEO
+            (stock_idx, video_originalName, video_key, video_location, video_size) 
+      VALUES(${stock_idx[0].stock_idx},
+            "${videoData.originalname}",
+            "${videoData.key}",
+            "${videoData.location}",
+            "${videoData.size}")
       `
     await connection.query(Query3)
     const Query4 = `
-      INSERT INTO IMAGE(stock_idx, image_name) VALUES(${stock_idx[0].stock_idx}, "${data.imageName}")
+      INSERT INTO IMAGE
+            (stock_idx, image_originalName, image_key, image_location, image_size) 
+      VALUES(${stock_idx[0].stock_idx},
+            "${imageData.originalname}",
+            "${imageData.transforms[0].key}",
+            "${imageData.transforms[0].location}",
+            "${imageData.transforms[0].size}")
       `
     await connection.query(Query4)
     const Query5 = `

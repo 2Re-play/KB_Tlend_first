@@ -1,12 +1,14 @@
-const createError = require('http-errors')
 const express = require('express')
+
+const app = express()
 const path = require('path')
 const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
 const logger = require('morgan')
 const swaggerUi = require('swagger-ui-express')
 const swaggerJSDoc = require('swagger-jsdoc')
 
-const indexRouter = require('./src/routes')
+const index = require('./src/routes')
 
 const swaggerDefinition = {
   info: { // API informations (required)
@@ -27,28 +29,28 @@ const options = {
 
 const swaggerSpec = swaggerJSDoc(options)
 
-
-const app = express()
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
 
+// uncomment after placing your favicon in /public
 app.use(logger('dev'))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
-app.use('/', indexRouter)
+app.use('/', index)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  next(createError(404))
+  const err = new Error('Not Found')
+  err.status = 404
+  next(err)
 })
 
 // error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}

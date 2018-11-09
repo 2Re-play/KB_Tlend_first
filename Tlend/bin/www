@@ -12,6 +12,7 @@ const app = require('../app')
  */
 
 const port = normalizePort(process.env.PORT || '3000')
+console.log('3000 port open !!!')
 app.set('port', port)
 
 /**
