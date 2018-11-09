@@ -31,8 +31,15 @@
     "swagger-ui-express": "^4.0.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "eslint": "^5.8.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0"
+  },
+  "babel": {
+    "plugins": [
+      "transform-async-to-generator"
+    ]
   }
 }

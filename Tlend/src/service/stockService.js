@@ -3,7 +3,6 @@ const stockDao = require('../dao/stockDao')
 
 // 메인 홈 가져오기
 exports.postStock = async (req, next) => {
-  // const connection = await getConnection()
 
   try {
     const {
