@@ -11,3 +11,13 @@ exports.postReward = async (req, res, next) => {
     response.respondOnError(e.message, res, 500)
   }
 }
+
+exports.getReward = async (req, res, next) => {
+  try {
+    const result = await rewardService.getReward(req, next)
+    response.respondJson('Successfully get investmentHome item', result, res, 200)
+  } catch (e) {
+    console.log(e)
+    response.respondOnError(e.message, res, 500)
+  }
+}

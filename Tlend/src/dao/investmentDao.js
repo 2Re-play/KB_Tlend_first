@@ -19,7 +19,7 @@ exports.postInvestment = (Transaction, data, next, req) => {
             investment_dueMonth,
             investment_startDate,
             investment_finishDate,
-            investment_enterDate
+            investment_enterDate,
             investment_interestRate)
           VALUES(
          "${data.title}",
@@ -32,7 +32,7 @@ exports.postInvestment = (Transaction, data, next, req) => {
           "${data.dueMonth}",
           "${data.startDate}",
           "${data.finishDate}",
-          "${data.enterDate}"
+          "${data.enterDate}",
            ${data.interstRate}
           )`
     await connection.query(Query1)

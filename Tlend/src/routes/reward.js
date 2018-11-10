@@ -13,5 +13,6 @@ reward.post('/', upload.fields([
   { name: 'image' },
 ]), rewardCtrl.postReward)
 
+reward.get('/', rewardCtrl.getReward)
 
 module.exports = reward

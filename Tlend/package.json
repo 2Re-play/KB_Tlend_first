@@ -8,6 +8,7 @@
     "start:pm2": "pm2 start config/pm2.config.json"
   },
   "dependencies": {
+    "aws-cloudfront-sign": "^2.2.0",
     "aws-sdk": "^2.351.0",
     "body-parser": "^1.18.3",
     "cookie-parser": "~1.4.3",

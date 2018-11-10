@@ -58,3 +58,34 @@ exports.postReward = (Transaction, data, next, req) => {
     return next(error)
   })
 }
+// investment item list 가져오기
+exports.rewardItem = (connection) => {
+  return new Promise((resolve, reject) => {
+    const Query = 'SELECT reward_title, reward_description,reward_finishDate, reward_achievement, reward_idx FROM Tlend.REWARD ORDER BY reward_time DESC'
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result)
+    })
+  })
+}
+
+// HOT investment item list 가져오기
+exports.hotRewardItem = (connection) => {
+  return new Promise((resolve, reject) => {
+    const Query = 'SELECT reward_title, reward_description,reward_finishDate, reward_achievement, reward_idx FROM Tlend.REWARD ORDER BY reward_achievement DESC'
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result[0])
+    })
+  })
+}
+
+exports.videoKey = (connection, reward_idx) => {
+  return new Promise((resolve, reject) => {
+    const Query = `SELECT video_key FROM VIDEO WHERE reward_idx =${reward_idx}`
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result)
+    })
+  })
+}
