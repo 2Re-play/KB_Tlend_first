@@ -12,6 +12,9 @@ stock.post('/', upload.fields([
   { name: 'video' },
   { name: 'image' },
 ]), stockCtrl.postStock)
+stock.post('/:stock_idx', stockCtrl.postStockFund)
+stock.get('/:stock_idx', stockCtrl.getDetailStock)
+stock.get('/:stock_idx/fund', stockCtrl.getStcokFund)
 
 
 module.exports = stock

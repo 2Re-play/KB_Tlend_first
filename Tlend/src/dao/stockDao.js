@@ -66,3 +66,100 @@ exports.postStock = (Transaction, data, next, req) => {
     return next(error)
   })
 }
+
+// investment item list 가져오기
+exports.stockItem = (connection) => {
+  return new Promise((resolve, reject) => {
+    const Query = 'SELECT stock_title, stock_description,stock_finishDate, stock_achievement, stock_idx FROM STOCK ORDER BY stock_time DESC;'
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result)
+    })
+  })
+}
+
+// HOT investment item list 가져오기
+exports.hotStockItem = (connection) => {
+  return new Promise((resolve, reject) => {
+    const Query = 'SELECT stock_title, stock_description,stock_finishDate, stock_achievement as achievement, stock_idx FROM STOCK ORDER BY stock_achievement DESC'
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result[0])
+    })
+  })
+}
+
+exports.videoKey = (connection, stock_idx) => {
+  return new Promise((resolve, reject) => {
+    const Query = `SELECT video_key FROM VIDEO WHERE stock_idx =${stock_idx}`
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result[0])
+    })
+  })
+}
+
+
+exports.stockDetail = (connection, stock_idx) => {
+  return new Promise((resolve, reject) => {
+    const Query = `SELECT 
+    b.video_key,
+    stock_title,
+    stock_description,
+    stock_companyName,
+    stock_achievement,
+    stock_currentMoney,
+    stock_goalMoney,
+    stock_finishDate,
+    stock_money,
+    stock_schedule,
+    stock_minMoney,
+    stock_comValue,
+    stock_repayDate,
+    stock_startDate,
+    stock_finishDate,
+    stock_enterDate,
+    d.fundpoint_text1,
+    d.fundpoint_text2,
+    d.fundpoint_text3,
+    c.image_key
+FROM
+    FUNDPOINT d
+        JOIN
+    (IMAGE c
+    JOIN (STOCK a
+    JOIN VIDEO b USING (stock_idx)) USING (stock_idx)) USING (stock_idx)
+WHERE
+    stock_idx = ${stock_idx}
+ORDER BY stock_startDate DESC`
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result)
+    })
+  })
+}
+
+exports.stockFund = (Transaction, next, req) => {
+  Transaction(async (connection) => {
+    const Query1 = `
+     SELECT stock_currentMoney FROM STOCK WHERE stock_idx = ${req.params.stock_idx}`
+    const currentMoney = await connection.query(Query1)
+    const sum = currentMoney[0].stock_currentMoney + Number(req.body.itemPrice)
+    const Query2 = `
+      UPDATE STOCK SET stock_currentMoney = ${sum} WHERE stock_idx = ${req.params.stock_idx}`
+    await connection.query(Query2)
+    console.log('success')
+  }).catch(error => {
+    return next(error)
+  })
+}
+
+exports.getStockFund = (connection, stock_idx) => {
+  return new Promise((resolve, reject) => {
+    const Query = `SELECT stock_title, stock_minStock, stock_money FROM STOCK WHERE stock_idx = ${stock_idx}`
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result[0])
+    })
+  })
+}

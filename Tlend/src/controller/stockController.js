@@ -11,3 +11,44 @@ exports.postStock = async (req, res, next) => {
     response.respondOnError(e.message, res, 500)
   }
 }
+
+exports.getDetailStock = async (req, res) => {
+  try {
+    const result = await stockService.getDetailStock(req)
+    response.respondJson('Successfully get detil stock item', result, res, 200)
+  } catch (e) {
+    console.log(e)
+    response.respondOnError(e.message, res, 500)
+  }
+}
+
+exports.postRewardFund = async (req, res, next) => {
+  try {
+    await stockService.postStockFund(req, next)
+    response.respondJson2('Successfully post stock fund', res, 200)
+  } catch (e) {
+    console.log(e)
+    response.respondOnError(e.message, res, 500)
+  }
+}
+
+
+exports.postStockFund = async (req, res, next) => {
+  try {
+    await stockService.postStockFund(req, next)
+    response.respondJson2('Successfully post stock fund', res, 200)
+  } catch (e) {
+    console.log(e)
+    response.respondOnError(e.message, res, 500)
+  }
+}
+
+exports.getStcokFund = async (req, res) => {
+  try {
+    const result = await stockService.getStockFund(req)
+    response.respondJson('Successfully get stock fund', result, res, 200)
+  } catch (e) {
+    console.log(e)
+    response.respondOnError(e.message, res, 500)
+  }
+}

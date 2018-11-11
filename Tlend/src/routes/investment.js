@@ -12,8 +12,10 @@ investment.post('/', upload.fields([
   { name: 'video' },
   { name: 'image' },
 ]), investmentCtrl.postInvestment)
-
+investment.post('/:investment_idx', investmentCtrl.postInvestmentFund)
 investment.get('/', investmentCtrl.getInvestment)
+investment.get('/:investment_idx', investmentCtrl.getDetailInvestment)
+investment.get('/:investment_idx/fund', investmentCtrl.getInvestmentFund)
 
 
 module.exports = investment

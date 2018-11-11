@@ -54,3 +54,49 @@ exports.getReward = async () => {
   console.log(result)
   return result
 }
+
+exports.getDetailReward = async (req) => {
+  const connection = await getConnection()
+  let result
+  try {
+    const itemList = await rewardDao.rewardDetail(connection, req.params.reward_idx)
+    itemList[0].video_key = await cloudfront.video(itemList.video_key)
+    itemList[0].image_key = await cloudfront.video(itemList.image_key)
+    result = {
+      itemList,
+    }
+    console.log(result)
+  } catch (e) {
+    console.log(e.message)
+  } finally {
+    connection.release()
+  }
+  console.log(result)
+  return result
+}
+
+exports.postRewardFund = async (req, next) => {
+  try {
+    await rewardDao.rewardFund(Transaction, next, req)
+  } catch (e) {
+    console.log(e.message)
+  }
+}
+
+exports.getRewardFund = async (req) => {
+  const connection = await getConnection()
+  let result
+  try {
+    const itemList = await rewardDao.getRewardFund(connection, req.params.reward_idx)
+    result = {
+      itemList,
+    }
+    console.log(result)
+  } catch (e) {
+    console.log(e.message)
+  } finally {
+    connection.release()
+  }
+  console.log(result)
+  return result
+}

@@ -77,7 +77,7 @@ exports.postInvestment = (Transaction, data, next, req) => {
 // investment item list 가져오기
 exports.investmentItem = (connection) => {
   return new Promise((resolve, reject) => {
-    const Query = 'SELECT investment_title, investment_description,investment_finishDate, investment_achievement, investment_idx FROM Tlend.INVESTMENT ORDER BY investment_time DESC;'
+    const Query = 'SELECT investment_title, investment_description,investment_finishDate, investment_achievement, investment_idx FROM INVESTMENT ORDER BY investment_time DESC;'
     connection.query(Query, (err, result) => {
       err && reject(err)
       resolve(result)
@@ -88,7 +88,7 @@ exports.investmentItem = (connection) => {
 // HOT investment item list 가져오기
 exports.hotInvestmentItem = (connection) => {
   return new Promise((resolve, reject) => {
-    const Query = 'SELECT investment_title, investment_description,investment_finishDate, investment_achievement, investment_idx FROM Tlend.INVESTMENT ORDER BY investment_achievement DESC'
+    const Query = 'SELECT investment_title, investment_description,investment_finishDate, investment_achievement as achievement, investment_idx FROM INVESTMENT ORDER BY investment_achievement DESC'
     connection.query(Query, (err, result) => {
       err && reject(err)
       resolve(result[0])
@@ -99,6 +99,72 @@ exports.hotInvestmentItem = (connection) => {
 exports.videoKey = (connection, investment_idx) => {
   return new Promise((resolve, reject) => {
     const Query = `SELECT video_key FROM VIDEO WHERE investment_idx =${investment_idx}`
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result[0])
+    })
+  })
+}
+
+exports.investmentDetail = (connection, investment_idx) => {
+  return new Promise((resolve, reject) => {
+    const Query = `SELECT 
+    b.video_key,
+    investment_title,
+    investment_description,
+    investment_companyName,
+    investment_achievement,
+    investment_currentMoney,
+    investment_goalMoney,
+    investment_finishDate,
+    investment_accountMoney,
+    investment_schedule,
+    investment_minMoney,
+    investment_startDate,
+    investment_finishDate,
+    investment_enterDate,
+    d.fundpoint_text1,
+    d.fundpoint_text2,
+    d.fundpoint_text3,
+    c.image_key
+FROM
+    FUNDPOINT d
+        JOIN
+    (IMAGE c
+    JOIN (INVESTMENT a
+    JOIN VIDEO b USING (investment_idx)) USING (investment_idx)) USING (investment_idx)
+WHERE
+    investment_idx = ${investment_idx}
+ORDER BY investment_startDate DESC`
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result)
+    })
+  })
+}
+
+exports.investmentFund = (Transaction, next, req) => {
+  Transaction(async (connection) => {
+    const Query1 = `
+     SELECT investment_currentMoney FROM INVESTMENT WHERE investment_idx = ${req.params.investment_idx}`
+    const currentMoney = await connection.query(Query1)
+    const sum = currentMoney[0].investment_currentMoney + Number(req.body.itemPrice)
+    console.log(typeof currentMoney[0].investment_currentMoney)
+    console.log(typeof Number(req.body.itemPrice))
+    console.log(sum)
+    const Query2 = `
+      UPDATE INVESTMENT SET investment_currentMoney = ${sum} WHERE investment_idx = ${req.params.investment_idx}`
+    await connection.query(Query2)
+    console.log('success')
+  }).catch(error => {
+    return next(error)
+  })
+}
+
+
+exports.getInvestmentFund = (connection, investment_idx) => {
+  return new Promise((resolve, reject) => {
+    const Query = `SELECT  investment_minStock, investment_accountMoney FROM INVESTMENT WHERE investment_idx = ${investment_idx}`
     connection.query(Query, (err, result) => {
       err && reject(err)
       resolve(result[0])

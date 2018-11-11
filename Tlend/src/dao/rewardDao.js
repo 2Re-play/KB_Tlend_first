@@ -89,3 +89,59 @@ exports.videoKey = (connection, reward_idx) => {
     })
   })
 }
+
+exports.rewardDetail = (connection, reward_idx) => {
+  return new Promise((resolve, reject) => {
+    console.log(reward_idx)
+    const Query = `SELECT 
+    b.video_key,
+    reward_title,
+    reward_description,
+    reward_companyName,
+    reward_achievement,
+    reward_currentMoney,
+    reward_goalMoney,
+    reward_finishDate,
+    reward_itemPrice,
+    reward_itemlist,
+    reward_startDate,
+    reward_finishDate,
+    c.image_key
+FROM
+    IMAGE c
+    JOIN (REWARD a
+    JOIN VIDEO b USING (reward_idx)) USING (reward_idx)
+WHERE
+    reward_idx = ${reward_idx}
+ORDER BY reward_startDate DESC`
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result)
+    })
+  })
+}
+
+exports.rewardFund = (Transaction, next, req) => {
+  Transaction(async (connection) => {
+    const Query1 = `
+     SELECT reward_currentMoney FROM REWARD WHERE reward_idx = ${req.params.reward_idx}`
+    const currentMoney = await connection.query(Query1)
+    const sum = currentMoney[0].reward_currentMoney + Number(req.body.itemPrice)
+    const Query2 = `
+      UPDATE REWARD SET reward_currentMoney = ${sum} WHERE reward_idx = ${req.params.reward_idx}`
+    await connection.query(Query2)
+    console.log('success')
+  }).catch(error => {
+    return next(error)
+  })
+}
+
+exports.getRewardFund = (connection, reward_idx) => {
+  return new Promise((resolve, reject) => {
+    const Query = `SELECT reward_title, reward_itemPrice FROM REWARD WHERE reward_idx = ${reward_idx}`
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result[0])
+    })
+  })
+}

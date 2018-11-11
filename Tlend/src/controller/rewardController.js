@@ -21,3 +21,33 @@ exports.getReward = async (req, res, next) => {
     response.respondOnError(e.message, res, 500)
   }
 }
+
+exports.getDetailReward = async (req, res) => {
+  try {
+    const result = await rewardService.getDetailReward(req)
+    response.respondJson('Successfully get detil reward item', result, res, 200)
+  } catch (e) {
+    console.log(e)
+    response.respondOnError(e.message, res, 500)
+  }
+}
+
+exports.postRewardFund = async (req, res, next) => {
+  try {
+    await rewardService.postRewardFund(req, next)
+    response.respondJson2('Successfully post reward fund', res, 200)
+  } catch (e) {
+    console.log(e)
+    response.respondOnError(e.message, res, 500)
+  }
+}
+
+exports.getRewardFund = async (req, res) => {
+  try {
+    const result = await rewardService.getRewardFund(req)
+    response.respondJson('Successfully get reward fund', result, res, 200)
+  } catch (e) {
+    console.log(e)
+    response.respondOnError(e.message, res, 500)
+  }
+}
