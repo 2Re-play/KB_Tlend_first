@@ -5,6 +5,7 @@ const stock = require('./stock')
 const investment = require('./investment')
 const reward = require('./reward')
 const search = require('./search')
+const howToFuning = require('./howToFunding')
 
 const router = Router()
 
@@ -15,6 +16,7 @@ router.use('/stock', stock)
 router.use('/investment', investment)
 router.use('/reward', reward)
 router.use('/search', search)
+router.use('/howtofunding', howToFuning)
 
 
 module.exports = router
