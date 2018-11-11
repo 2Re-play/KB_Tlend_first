@@ -52,3 +52,13 @@ exports.getInvestmentFund = async (req, res) => {
     response.respondOnError(e.message, res, 500)
   }
 }
+
+exports.getInvestmentFundFinish = async (req, res) => {
+  try {
+    const result = await investmentService.getInvestmentFundFinsh(req)
+    response.respondJson('Successfully get investment fund finish', result, res, 200)
+  } catch (e) {
+    console.log(e)
+    response.respondOnError(e.message, res, 500)
+  }
+}

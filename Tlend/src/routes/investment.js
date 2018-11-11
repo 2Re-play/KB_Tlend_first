@@ -16,6 +16,6 @@ investment.post('/:investment_idx', investmentCtrl.postInvestmentFund)
 investment.get('/', investmentCtrl.getInvestment)
 investment.get('/:investment_idx', investmentCtrl.getDetailInvestment)
 investment.get('/:investment_idx/fund', investmentCtrl.getInvestmentFund)
-
+investment.get('/:investment_idx/fund/finish', investmentCtrl.getInvestmentFundFinish)
 
 module.exports = investment

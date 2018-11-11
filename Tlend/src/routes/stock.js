@@ -15,6 +15,7 @@ stock.post('/', upload.fields([
 stock.post('/:stock_idx', stockCtrl.postStockFund)
 stock.get('/:stock_idx', stockCtrl.getDetailStock)
 stock.get('/:stock_idx/fund', stockCtrl.getStcokFund)
+stock.get('/:stock_idx/fund/finish', stockCtrl.getStcokFundFinish)
 
 
 module.exports = stock

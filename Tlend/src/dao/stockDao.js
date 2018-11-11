@@ -113,7 +113,7 @@ exports.stockDetail = (connection, stock_idx) => {
     stock_finishDate,
     stock_money,
     stock_schedule,
-    stock_minMoney,
+    stock_minStock,
     stock_comValue,
     stock_repayDate,
     stock_startDate,
@@ -157,6 +157,16 @@ exports.stockFund = (Transaction, next, req) => {
 exports.getStockFund = (connection, stock_idx) => {
   return new Promise((resolve, reject) => {
     const Query = `SELECT stock_title, stock_minStock, stock_money FROM STOCK WHERE stock_idx = ${stock_idx}`
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result[0])
+    })
+  })
+}
+
+exports.getStockFundFinish = (connection, stock_idx) => {
+  return new Promise((resolve, reject) => {
+    const Query = `SELECT stock_companyName, stock_enterDate FROM STOCK WHERE stock_idx = ${stock_idx}`
     connection.query(Query, (err, result) => {
       err && reject(err)
       resolve(result[0])

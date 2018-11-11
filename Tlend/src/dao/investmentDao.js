@@ -119,7 +119,7 @@ exports.investmentDetail = (connection, investment_idx) => {
     investment_finishDate,
     investment_accountMoney,
     investment_schedule,
-    investment_minMoney,
+    investment_minStock,
     investment_startDate,
     investment_finishDate,
     investment_enterDate,
@@ -165,6 +165,17 @@ exports.investmentFund = (Transaction, next, req) => {
 exports.getInvestmentFund = (connection, investment_idx) => {
   return new Promise((resolve, reject) => {
     const Query = `SELECT  investment_minStock, investment_accountMoney FROM INVESTMENT WHERE investment_idx = ${investment_idx}`
+    connection.query(Query, (err, result) => {
+      err && reject(err)
+      resolve(result[0])
+    })
+  })
+}
+
+
+exports.getInvestmentFundFinish = (connection, investment_idx) => {
+  return new Promise((resolve, reject) => {
+    const Query = `SELECT investment_companyName, investment_enterDate FROM INVESTMENT WHERE investment_idx = ${investment_idx}`
     connection.query(Query, (err, result) => {
       err && reject(err)
       resolve(result[0])

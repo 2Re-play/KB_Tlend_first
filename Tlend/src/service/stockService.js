@@ -79,3 +79,21 @@ exports.getStockFund = async (req) => {
   console.log(result)
   return result
 }
+
+exports.getStockFundFinsh = async (req) => {
+  const connection = await getConnection()
+  let result
+  try {
+    const itemList = await stockDao.getStockFundFinish(connection, req.params.stock_idx)
+    result = {
+      itemList,
+    }
+    console.log(result)
+  } catch (e) {
+    console.log(e.message)
+  } finally {
+    connection.release()
+  }
+  console.log(result)
+  return result
+}

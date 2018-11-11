@@ -52,3 +52,14 @@ exports.getStcokFund = async (req, res) => {
     response.respondOnError(e.message, res, 500)
   }
 }
+
+
+exports.getStcokFundFinish = async (req, res) => {
+  try {
+    const result = await stockService.getStockFundFinsh(req)
+    response.respondJson('Successfully get stock fund finish', result, res, 200)
+  } catch (e) {
+    console.log(e)
+    response.respondOnError(e.message, res, 500)
+  }
+}
