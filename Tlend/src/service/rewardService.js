@@ -59,11 +59,11 @@ exports.getDetailReward = async (req) => {
   const connection = await getConnection()
   let result
   try {
-    const itemList = await rewardDao.rewardDetail(connection, req.params.reward_idx)
-    itemList[0].video_key = await cloudfront.video(itemList.video_key)
-    itemList[0].image_key = await cloudfront.video(itemList.image_key)
+    const rewardItem = await rewardDao.rewardDetail(connection, req.params.reward_idx)
+    rewardItem.video_key = await cloudfront.video(rewardItem.video_key)
+    rewardItem.image_key = await cloudfront.video(rewardItem.image_key)
     result = {
-      itemList,
+      rewardItem,
     }
     console.log(result)
   } catch (e) {

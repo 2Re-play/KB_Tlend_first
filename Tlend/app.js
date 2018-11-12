@@ -5,29 +5,9 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const logger = require('morgan')
-const swaggerUi = require('swagger-ui-express')
-const swaggerJSDoc = require('swagger-jsdoc')
 
 const index = require('./src/routes')
 
-const swaggerDefinition = {
-  info: { // API informations (required)
-    title: 'tlend\'s Server API', // Title (required)
-    version: '1.0.0', // Version (required)
-    description: 'tlend\'s Server API', // Description (optional)
-  },
-  host: '13.125.190.134:3000', // Host (optional)
-  basePath: '/', // Base path (optional)
-}
-
-const options = {
-  // Import swaggerDefinitions
-  swaggerDefinition,
-  // Path to the API docs
-  apis: ['./swagger/tlend_api.yml'],
-}
-
-const swaggerSpec = swaggerJSDoc(options)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -40,7 +20,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', index)
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

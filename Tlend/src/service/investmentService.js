@@ -91,11 +91,11 @@ exports.getDetailInvestment = async (req) => {
   const connection = await getConnection()
   let result
   try {
-    const itemList = await investmentDao.investmentDetail(connection, req.params.investment_idx)
-    itemList[0].video_key = await cloudfront.video(itemList.video_key)
-    itemList[0].image_key = await cloudfront.video(itemList.image_key)
+    const investmentItem = await investmentDao.investmentDetail(connection, req.params.investment_idx)
+    investmentItem[0].video_key = await cloudfront.video(investmentItem.video_key)
+    investmentItem[0].image_key = await cloudfront.video(investmentItem.image_key)
     result = {
-      itemList,
+      investmentItem,
     }
     console.log(result)
   } catch (e) {
@@ -108,50 +108,37 @@ exports.getDetailInvestment = async (req) => {
 }
 
 exports.postInvestmentFund = async (req, next) => {
-  const connection = await getConnection()
   try {
     await investmentDao.investmentFund(Transaction, next, req)
   } catch (e) {
     console.log(e.message)
-  } finally {
-    connection.release()
   }
 }
 
 
 exports.getInvestmentFund = async (req) => {
   const connection = await getConnection()
-  let result
+  let itemList
   try {
-    const itemList = await investmentDao.getInvestmentFund(connection, req.params.investment_idx)
-    result = {
-      itemList,
-    }
-    console.log(result)
+    itemList = await investmentDao.getInvestmentFund(connection, req.params.investment_idx)
   } catch (e) {
     console.log(e.message)
   } finally {
     connection.release()
   }
-  console.log(result)
-  return result
+  return itemList
 }
 
 
 exports.getInvestmentFundFinsh = async (req) => {
   const connection = await getConnection()
-  let result
+  let itemList
   try {
-    const itemList = await investmentDao.getInvestmentFundFinish(connection, req.params.investment_idx)
-    result = {
-      itemList,
-    }
-    console.log(result)
+    itemList = await investmentDao.getInvestmentFundFinish(connection, req.params.investment_idx)
   } catch (e) {
     console.log(e.message)
   } finally {
     connection.release()
   }
-  console.log(result)
-  return result
+  return itemList
 }

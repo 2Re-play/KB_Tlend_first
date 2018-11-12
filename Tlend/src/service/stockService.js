@@ -35,11 +35,11 @@ exports.getDetailStock = async (req) => {
   const connection = await getConnection()
   let result
   try {
-    const itemList = await stockDao.stockDetail(connection, req.params.stock_idx)
-    itemList[0].video_key = await cloudfront.video(itemList.video_key)
-    itemList[0].image_key = await cloudfront.video(itemList.image_key)
+    const stockItem = await stockDao.stockDetail(connection, req.params.stock_idx)
+    stockItem[0].video_key = await cloudfront.video(stockItem.video_key)
+    stockItem[0].image_key = await cloudfront.video(stockItem.image_key)
     result = {
-      itemList,
+      stockItem,
     }
     console.log(result)
   } catch (e) {
@@ -64,36 +64,26 @@ exports.postStockFund = async (req, next) => {
 
 exports.getStockFund = async (req) => {
   const connection = await getConnection()
-  let result
+  let itemList
   try {
-    const itemList = await stockDao.getStockFund(connection, req.params.stock_idx)
-    result = {
-      itemList,
-    }
-    console.log(result)
+    itemList = await stockDao.getStockFund(connection, req.params.stock_idx)
   } catch (e) {
     console.log(e.message)
   } finally {
     connection.release()
   }
-  console.log(result)
-  return result
+  return itemList
 }
 
 exports.getStockFundFinsh = async (req) => {
   const connection = await getConnection()
-  let result
+  let itemList
   try {
-    const itemList = await stockDao.getStockFundFinish(connection, req.params.stock_idx)
-    result = {
-      itemList,
-    }
-    console.log(result)
+    itemList = await stockDao.getStockFundFinish(connection, req.params.stock_idx)
   } catch (e) {
     console.log(e.message)
   } finally {
     connection.release()
   }
-  console.log(result)
-  return result
+  return itemList
 }

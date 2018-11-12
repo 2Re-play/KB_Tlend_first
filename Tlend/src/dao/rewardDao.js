@@ -116,7 +116,7 @@ WHERE
 ORDER BY reward_startDate DESC`
     connection.query(Query, (err, result) => {
       err && reject(err)
-      resolve(result)
+      resolve(result[0])
     })
   })
 }
@@ -138,7 +138,7 @@ exports.rewardFund = (Transaction, next, req) => {
 
 exports.getRewardFund = (connection, reward_idx) => {
   return new Promise((resolve, reject) => {
-    const Query = `SELECT reward_title, reward_itemPrice FROM REWARD WHERE reward_idx = ${reward_idx}`
+    const Query = `SELECT reward_itemPrice FROM REWARD WHERE reward_idx = ${reward_idx}`
     connection.query(Query, (err, result) => {
       err && reject(err)
       resolve(result[0])
